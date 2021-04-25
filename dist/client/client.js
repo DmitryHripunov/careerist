@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "5c3fb536ef8d89f65292";
+/******/ 	var hotCurrentHash = "7535ad7f9a31190d0a52";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -30801,6 +30801,36 @@ exports.devToolsEnhancer =
 
 /***/ }),
 
+/***/ "./node_modules/redux-thunk/es/index.js":
+/*!**********************************************!*\
+  !*** ./node_modules/redux-thunk/es/index.js ***!
+  \**********************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", { value: true });
+function createThunkMiddleware(extraArgument) {
+    return function (_ref) {
+        var dispatch = _ref.dispatch, getState = _ref.getState;
+        return function (next) {
+            return function (action) {
+                if (typeof action === 'function') {
+                    return action(dispatch, getState, extraArgument);
+                }
+                return next(action);
+            };
+        };
+    };
+}
+var thunk = createThunkMiddleware();
+thunk.withExtraArgument = createThunkMiddleware;
+exports.default = thunk;
+
+
+/***/ }),
+
 /***/ "./node_modules/redux/es/redux.js":
 /*!****************************************!*\
   !*** ./node_modules/redux/es/redux.js ***!
@@ -33581,6 +33611,25 @@ module.exports = function (module) {
 
 "use strict";
 
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
@@ -33588,18 +33637,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.App = void 0;
 __webpack_require__(/*! ./css/main.global.css */ "./src/css/main.global.css");
 var redux_1 = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+var redux_thunk_1 = __importDefault(__webpack_require__(/*! redux-thunk */ "./node_modules/redux-thunk/es/index.js"));
 var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
-// import ReactDOM from 'react-dom';
-var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_1 = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
 var redux_devtools_extension_1 = __webpack_require__(/*! redux-devtools-extension */ "./node_modules/redux-devtools-extension/index.js");
 var root_1 = __webpack_require__(/*! react-hot-loader/root */ "./node_modules/react-hot-loader/root.js");
 var reducers_1 = __importDefault(__webpack_require__(/*! ./reducers */ "./src/reducers/index.js"));
 var container_1 = __importDefault(__webpack_require__(/*! ./containers/container */ "./src/containers/container.js"));
 var initialStore = [];
-var store = redux_1.createStore(reducers_1.default, initialStore, redux_devtools_extension_1.composeWithDevTools());
+var store = redux_1.createStore(reducers_1.default, initialStore, redux_devtools_extension_1.composeWithDevTools(redux_1.applyMiddleware(redux_thunk_1.default)));
+var timeout = function () { return function (dispatch, getState) {
+    dispatch({ type: 'START' });
+    setTimeout(function () {
+        dispatch({ type: 'FINISH' });
+    }, 1500);
+}; };
 function AppComponent() {
+    react_1.useEffect(function () {
+        store.dispatch(timeout());
+    });
     return (react_1.default.createElement(react_redux_1.Provider, { store: store },
-        react_1.default.createElement(container_1.default, null)));
+        react_1.default.createElement(container_1.default, null),
+        ",")
+    // document.getElementById('react_root')
+    );
 }
 exports.App = root_1.hot(function () { return react_1.default.createElement(AppComponent, null); });
 
@@ -33619,7 +33680,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.removeComment = exports.addComment = void 0;
+exports.setUserData = exports.addComment = void 0;
 var customDate_1 = __importDefault(__webpack_require__(/*! ../js/customDate */ "./src/js/customDate.js"));
 var commentId = 0;
 var addComment = function (name, text) {
@@ -33632,13 +33693,28 @@ var addComment = function (name, text) {
     };
 };
 exports.addComment = addComment;
-var removeComment = function (id) {
-    return {
-        type: 'REMOVE_COMMENT',
-        id: id,
-    };
-};
-exports.removeComment = removeComment;
+var setUserData = function () { return function (dispatch, getState) {
+    var token = getState().app.token;
+    dispatch(showLoader());
+    axios
+        .get("https://oauth.reddit.com/api/v1/me", {
+        headers: { Authorization: "bearer " + token },
+    })
+        .then(function (resp) {
+        dispatch({
+            type: SET_USERDATA,
+            name: resp.data.name,
+            iconImg: uriToLink(resp.data.icon_img),
+            messageCount: resp.data.inbox_count.toString(),
+        });
+        dispatch(hideLoader());
+    })
+        .catch(function (er) {
+        dispatch(showAlert("\u0412\u043E \u0432\u0440\u0435\u043C\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u0434\u0430\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0434\u043D\u0435\u0435. " + er));
+        dispatch(hideLoader());
+    });
+}; };
+exports.setUserData = setUserData;
 
 
 /***/ }),
@@ -33800,10 +33876,10 @@ var CommentForm_1 = __importDefault(__webpack_require__(/*! ../components/Commen
 var CommentList_1 = __importDefault(__webpack_require__(/*! ../components/CommentList */ "./src/components/CommentList.js"));
 var actions_1 = __webpack_require__(/*! ../actions */ "./src/actions/index.js");
 var Container = function (_a) {
-    var comments = _a.comments, addComment = _a.addComment, removeComment = _a.removeComment;
+    var comments = _a.comments, addComment = _a.addComment;
     return (react_1.default.createElement("div", null,
         react_1.default.createElement(CommentForm_1.default, { addComment: addComment }),
-        react_1.default.createElement(CommentList_1.default, { comments: comments, removeComment: removeComment })));
+        react_1.default.createElement(CommentList_1.default, { comments: comments })));
 };
 var mapStateToProps = function (state) {
     return {
@@ -33813,7 +33889,6 @@ var mapStateToProps = function (state) {
 var mapDispatchToProps = function (dispatch) {
     return {
         addComment: function (name, text) { return dispatch(actions_1.addComment(name, text)); },
-        removeComment: function (id) { return dispatch(actions_1.removeComment(id)); },
     };
 };
 Container = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Container);
@@ -33968,7 +34043,6 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var rootReducer = function (state, action) {
-    if (state === void 0) { state = []; }
     switch (action.type) {
         case 'ADD_COMMENT':
             return __spreadArray(__spreadArray([], state), [

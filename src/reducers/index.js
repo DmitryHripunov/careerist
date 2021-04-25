@@ -1,4 +1,4 @@
-const rootReducer = (state = [], action) => {
+const rootReducer = (state, action) => {
   switch (action.type) {
     case 'ADD_COMMENT':
     return [

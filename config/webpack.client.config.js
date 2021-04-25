@@ -12,8 +12,13 @@ const GLOBAL_CSS_REGEXP = /\.global\.css$/;
 
 function getEntry() {
   if (IS_PROD) {
-    false
+    return [ path.resolve(__dirname, "../src/client/index.jsx")];
   }
+
+  return [
+    path.resolve(__dirname, "../src/client/index.jsx"),
+    "webpack-hot-middleware/client?path=http://localhost:9001/static/__webpack_hmr",
+  ];
 }
 
 module.exports = {
@@ -26,10 +31,7 @@ module.exports = {
 
   mode: NODE_ENV ? NODE_ENV : "development",
 
-  entry: [
-    path.resolve(__dirname, "../src/client/index.jsx"),
-    "webpack-hot-middleware/client?path=http://localhost:9001/static/__webpack_hmr",
-  ],
+  entry: getEntry(),
 
   output: {
     path: path.resolve(__dirname, "../dist/client"),
