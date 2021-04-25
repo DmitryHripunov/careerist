@@ -1,0 +1,105 @@
+/* @import "~normalize.css"; */
+@import "./fonts.css";
+
+body {
+  font-family: "Gotha", sans-serif;
+  font-size: 16px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0 !important;
+  border: 0 !important;
+  height: 1px !important;
+  width: 1px !important;
+  overflow: hidden;
+}
+
+.comments-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 10px;
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: center;
+  align-items: center;
+}
+
+.comment-list {
+  display: flex;
+  flex-direction: column-reverse;
+  align-items: center;
+  list-style: none; 
+  padding-left: 0;
+  margin-top: 0;
+  max-width: 700px;
+}
+
+.comment-item {
+  position: relative;
+  padding: 20px;
+  border: 1px solid #cecece;
+  margin-bottom: 20px;
+  width: 100%;
+}
+
+.comment-user {
+  font-family: "Iskra";
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.comment-data {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.comments-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: center;
+  margin-bottom: 40px; 
+}
+
+.comments-form-label {
+  width: 100%;
+  text-align: center;
+}
+
+.comments-form-input,
+.comments-form-textarea {
+  font-family: "Gotha";
+  font-size: 20px;
+  max-width: 500px;
+  min-height: 40px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+}
+
+.comments-form-btn {
+  font-family: "Gotha";
+  font-size: 16px;
+  max-width: 300px;
+  min-height: 40px;
+  width: 100%;
+  margin-bottom: 20px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 3px;
+  border: none;
+  background-color: #cecece;
+}
+
+.comment-btn {
+  cursor: pointer;
+}
+
+.error {
+  border-color: red;
+  width: 100%;
+}
