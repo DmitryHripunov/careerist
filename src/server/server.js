@@ -1,14 +1,24 @@
 import express from 'express';
 import ReactDOM from 'react-dom/server';
+import comression from 'compression';
+import helmet from 'helmet';
 
 import { App } from '../App';
 import { indexTemplate } from './indexTemplate';
 import axios from 'axios';
 
-const app = express();
 const PORT = process.env.PORT || 5000;
+const IS_DEV = process.env.NODE_ENV !== 'production';
 
-// app.use('/static', express.static('./dist/client'));
+const app = express();
+app.use('/static', express.static('./dist/client'));
+
+if (!IS_DEV) {
+  app.use(comression());
+  app.use(helmet({
+    contentSecurityPolicy: false,
+  }));
+}
 
 app.get('/', (req, res) => {
   res.send(indexTemplate(ReactDOM.renderToString(App())));

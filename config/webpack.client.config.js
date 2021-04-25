@@ -5,9 +5,16 @@ const { HotModuleReplacementPlugin, DefinePlugin } = require("webpack");
 
 const NODE_ENV = process.env.NODE_ENV;
 const IS_DEV = NODE_ENV == "development";
+const IS_PROD = NODE_ENV == "production";
 const GLOBAL_CSS_REGEXP = /\.global\.css$/;
 // const COMMON_PLUGINS = [ new DefinePlugin({"process.env.CLIENT_ID": ""tEnmcP62ZX80r""})]
 // const IS_PROD = NODE_ENV == 'production';
+
+function getEntry() {
+  if (IS_PROD) {
+    false
+  }
+}
 
 module.exports = {
   resolve: {
