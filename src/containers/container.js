@@ -3,11 +3,11 @@ import { connect } from 'react-redux';
 import CommentForm from '../components/CommentForm';
 import CommentList from '../components/CommentList';
 
-import {addComment} from '../actions';
+import {addComment, getComments} from '../actions';
 
 
 let Container = ({ comments, addComment }) => {
-
+  // console.log(getComments)
   return (
     <div>
       <CommentForm addComment={addComment} />
@@ -25,6 +25,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     addComment: (name, text) => dispatch(addComment(name, text)),
+    // getComments: (state) => dispatch(getComments(state)),
   }
 };
 

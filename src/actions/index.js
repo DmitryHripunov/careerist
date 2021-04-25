@@ -1,7 +1,13 @@
+import { Action } from "redux";
+import { ThunkAction } from "redux-thunk";
+import axios from "axios";
+import { Action } from "redux";
+
 import printDate from '../js/customDate';
 let commentId = 0;
 
 export const addComment = (name, text) => {
+  // console.log(token)
   return {
     type: 'ADD_COMMENT',
     id: commentId++,
@@ -11,30 +17,35 @@ export const addComment = (name, text) => {
   }
 };
 
-export const setUserData = () => (dispatch, getState) => {
-  const token = getState().app.token;
-  dispatch(showLoader());
+export const getComments = () => (state) => {
+  return {
+    type: 'GET_COMMENT',
+    id: state.id,
+    name: state.name,
+    text: state.text,
+    date: state.date,
+  }
 
-  axios
-    .get("https://oauth.reddit.com/api/v1/me", {
-      headers: { Authorization: `bearer ${token}` },
-    })
-    .then((resp) => {
-      dispatch({
-        type: SET_USERDATA,
-        name: resp.data.name,
-        iconImg: uriToLink(resp.data.icon_img),
-        messageCount: resp.data.inbox_count.toString(),
-      });
-      dispatch(hideLoader());
-    })
-    .catch((er) => {
-      dispatch(
-        showAlert(
-          `Во время загрузки данных произошла ошибка. Пожалуйста, попробуйте позднее. ${er}`
-        )
-      );
-      dispatch(hideLoader());
-    });
+  // const token = getState().app;
+  // console.log(token)
+  // dispatch(showLoader());
+
+  // axios
+  // .get('https://careerist-app.herokuapp.com/')
+  // .then((resp) => {
+  //   dispatch({
+  //     type: 'SET_USERDATA',
+  //     id: resp.commentId,
+  //     name: resp.name,
+  //     text: resp.text,
+  //   });
+  // })
+  // .catch((er) => {
+  //   dispatch(
+  //     showAlert(
+  //       `Во время загрузки данных произошла ошибка. Пожалуйста, попробуйте позднее. ${er}`
+  //     )
+  //   );
+  // });
 };
 

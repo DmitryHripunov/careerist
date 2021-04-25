@@ -63,7 +63,7 @@
 /******/
 /******/ 	var hotApplyOnUpdate = true;
 /******/ 	// eslint-disable-next-line no-unused-vars
-/******/ 	var hotCurrentHash = "7535ad7f9a31190d0a52";
+/******/ 	var hotCurrentHash = "be2d353bd7379c0d7312";
 /******/ 	var hotRequestTimeout = 10000;
 /******/ 	var hotCurrentModuleData = {};
 /******/ 	var hotCurrentChildModule;
@@ -33680,10 +33680,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.setUserData = exports.addComment = void 0;
+exports.getComments = exports.addComment = void 0;
 var customDate_1 = __importDefault(__webpack_require__(/*! ../js/customDate */ "./src/js/customDate.js"));
 var commentId = 0;
 var addComment = function (name, text) {
+    // console.log(token)
     return {
         type: 'ADD_COMMENT',
         id: commentId++,
@@ -33693,28 +33694,36 @@ var addComment = function (name, text) {
     };
 };
 exports.addComment = addComment;
-var setUserData = function () { return function (dispatch, getState) {
-    var token = getState().app.token;
-    dispatch(showLoader());
-    axios
-        .get("https://oauth.reddit.com/api/v1/me", {
-        headers: { Authorization: "bearer " + token },
-    })
-        .then(function (resp) {
-        dispatch({
-            type: SET_USERDATA,
-            name: resp.data.name,
-            iconImg: uriToLink(resp.data.icon_img),
-            messageCount: resp.data.inbox_count.toString(),
-        });
-        dispatch(hideLoader());
-    })
-        .catch(function (er) {
-        dispatch(showAlert("\u0412\u043E \u0432\u0440\u0435\u043C\u044F \u0437\u0430\u0433\u0440\u0443\u0437\u043A\u0438 \u0434\u0430\u043D\u043D\u044B\u0445 \u043F\u0440\u043E\u0438\u0437\u043E\u0448\u043B\u0430 \u043E\u0448\u0438\u0431\u043A\u0430. \u041F\u043E\u0436\u0430\u043B\u0443\u0439\u0441\u0442\u0430, \u043F\u043E\u043F\u0440\u043E\u0431\u0443\u0439\u0442\u0435 \u043F\u043E\u0437\u0434\u043D\u0435\u0435. " + er));
-        dispatch(hideLoader());
-    });
+var getComments = function () { return function (state) {
+    return {
+        type: 'GET_COMMENT',
+        id: state.id,
+        name: state.name,
+        text: state.text,
+        date: state.date,
+    };
+    // const token = getState().app;
+    // console.log(token)
+    // dispatch(showLoader());
+    // axios
+    // .get('https://careerist-app.herokuapp.com/')
+    // .then((resp) => {
+    //   dispatch({
+    //     type: 'SET_USERDATA',
+    //     id: resp.commentId,
+    //     name: resp.name,
+    //     text: resp.text,
+    //   });
+    // })
+    // .catch((er) => {
+    //   dispatch(
+    //     showAlert(
+    //       `Во время загрузки данных произошла ошибка. Пожалуйста, попробуйте позднее. ${er}`
+    //     )
+    //   );
+    // });
 }; };
-exports.setUserData = setUserData;
+exports.getComments = getComments;
 
 
 /***/ }),
@@ -33877,6 +33886,7 @@ var CommentList_1 = __importDefault(__webpack_require__(/*! ../components/Commen
 var actions_1 = __webpack_require__(/*! ../actions */ "./src/actions/index.js");
 var Container = function (_a) {
     var comments = _a.comments, addComment = _a.addComment;
+    // console.log(getComments)
     return (react_1.default.createElement("div", null,
         react_1.default.createElement(CommentForm_1.default, { addComment: addComment }),
         react_1.default.createElement(CommentList_1.default, { comments: comments })));
@@ -33889,6 +33899,7 @@ var mapStateToProps = function (state) {
 var mapDispatchToProps = function (dispatch) {
     return {
         addComment: function (name, text) { return dispatch(actions_1.addComment(name, text)); },
+        // getComments: (state) => dispatch(getComments(state)),
     };
 };
 Container = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Container);
@@ -34043,11 +34054,16 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var rootReducer = function (state, action) {
+    if (state === void 0) { state = initialState; }
     switch (action.type) {
         case 'ADD_COMMENT':
             return __spreadArray(__spreadArray([], state), [
                 { id: action.id, name: action.name, text: action.text, date: action.date },
             ]);
+        case 'GET_COMMENT':
+            return [
+                state,
+            ];
         default: return state;
     }
 };

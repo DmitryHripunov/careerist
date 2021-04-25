@@ -65,44 +65,56 @@ exports.App = root_1.hot(function () { return react_1.default.createElement(AppC
 
 /***/ }),
 
-/***/ "./src/client/index.jsx":
-/*!******************************!*\
-  !*** ./src/client/index.jsx ***!
-  \******************************/
+/***/ "./src/containers/container.js":
+/*!*************************************!*\
+  !*** ./src/containers/container.js ***!
+  \*************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var React = __importStar(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
-var ReactDOM = __importStar(__webpack_require__(/*! react-dom */ "./node_modules/@hot-loader/react-dom/index.js"));
-var App_1 = __webpack_require__(/*! ../App */ "./src/App.js");
-window.addEventListener("load", function () {
-    ReactDOM.hydrate(React.createElement(App_1.App, null), document.getElementById("react_root"));
-});
+var react_1 = __importDefault(__webpack_require__(/*! react */ "./node_modules/react/index.js"));
+var react_redux_1 = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+var CommentForm_1 = __importDefault(__webpack_require__(/*! ../components/CommentForm */ "./src/components/CommentForm.js"));
+var CommentList_1 = __importDefault(__webpack_require__(/*! ../components/CommentList */ "./src/components/CommentList.js"));
+var actions_1 = __webpack_require__(/*! ../actions */ "./src/actions/index.js");
+var Container = function (_a) {
+    var comments = _a.comments, addComment = _a.addComment;
+    return (react_1.default.createElement("div", null,
+        react_1.default.createElement(CommentForm_1.default, { addComment: addComment }),
+        react_1.default.createElement(CommentList_1.default, __assign({}, actions_1.getComments ? actions_1.getComments : comments = { comments: comments }))));
+};
+var mapStateToProps = function (state) {
+    return {
+        comments: state,
+    };
+};
+var mapDispatchToProps = function (dispatch) {
+    return {
+        addComment: function (name, text) { return dispatch(actions_1.addComment(name, text)); },
+    };
+};
+Container = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Container);
+exports.default = Container;
 
 
 /***/ })
 
 })
-//# sourceMappingURL=main.66f31591657d67e207c1.hot-update.js.map
+//# sourceMappingURL=main.2de200cc56d993b16a81.hot-update.js.map

@@ -5,7 +5,6 @@ import helmet from 'helmet';
 
 import { App } from '../App';
 import { indexTemplate } from './indexTemplate';
-import axios from 'axios';
 
 const PORT = process.env.PORT || 5000;
 const IS_DEV = process.env.NODE_ENV !== 'production';
