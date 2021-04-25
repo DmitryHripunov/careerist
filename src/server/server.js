@@ -27,7 +27,7 @@ app.get('/', (req, res) => {
 app.get('/', (req, res) => {
   axios
     .post(
-      `http://localhost:${PORT}`,
+      `https://careerist-app.herokuapp.com/`,
       {
         headers: { 'Content-type': 'application/json' },
       }
