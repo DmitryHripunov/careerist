@@ -17,10 +17,8 @@ const store = createStore(rootReducer, initialStore, composeWithDevTools());
 function AppComponent() {
   return(
     <Provider store={store}>
-      <Container />,
+      <Container />
     </Provider>
-  
-  // document.getElementById('react_root')
   )
 }
 export const App = hot(() => <AppComponent />);
